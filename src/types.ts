@@ -7,6 +7,7 @@ export type WatchEntry = {
   rating: number
   cover?: string
   createdAt: number
+  position?: number
 }
 
 export function isHttpUrl(value: string) {

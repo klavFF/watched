@@ -2,14 +2,22 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     function validEntry() {
-      return request.resource.data.keys().hasOnly(['title', 'kind', 'rating', 'cover', 'createdAt'])
+      return request.resource.data.keys().hasOnly(['title', 'kind', 'rating', 'cover', 'createdAt', 'position'])
         && request.resource.data.title is string
         && request.resource.data.title.size() > 0
         && request.resource.data.title.size() < 160
         && request.resource.data.kind in ['movie', 'series']
         && request.resource.data.rating is number
         && request.resource.data.rating >= 0
-        && request.resource.data.rating <= 10;
+        && request.resource.data.rating <= 10
+        && (
+          !('position' in request.resource.data)
+          || (
+            request.resource.data.position is int
+            && request.resource.data.position >= 0
+            && request.resource.data.position < 10000
+          )
+        );
     }
 
     match /entries/{entryId} {
